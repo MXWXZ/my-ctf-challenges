@@ -1,0 +1,11 @@
+version: "2.2"
+
+services:
+  web:
+    build: .
+    restart: "always"
+    ports:
+      - "1314:8080"
+    pids_limit: 1024
+    cpus: "0.25"
+    mem_limit: 2048M

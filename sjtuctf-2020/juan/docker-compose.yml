@@ -1,0 +1,9 @@
+version: "2.2"
+
+services:
+  web:
+    build: .
+    restart: "always"
+    ports:
+      - "30090:8888"
+    mem_limit: 2048M

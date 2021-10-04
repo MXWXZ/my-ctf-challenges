@@ -1,0 +1,18 @@
+
+extends layout
+
+block content
+	nav.navbar.navbar-expand.navbar-light.bg-light
+		.nav-item
+			.navbar-brand Control Panel
+		.navbar-nav.ml-auto
+			.nav-item
+				button.btn.navbar-btn.btn-outline-dark#btn-logout Sign Out
+
+	#account-form-container.center-vertical
+		form.card.card-body.bg-light
+			h2 No, you are not <a href="/whoami">admin</a>, you are not handsome:(
+
+block scripts
+	script(src='/js/views/home.js')
+	script(src='/js/controllers/homeController.js')

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+    - "19261:80"
+    volumes:
+    - ./www:/var/www/html:ro
+    - ./php.ini:/usr/local/etc/php/php.ini:ro

@@ -1,0 +1,11 @@
+<!doctype html>
+<title>ASS</title>
+<h1>ASS - {{session['ans']}}/100</h1>
+{% if msg %}
+<p>{{ msg }}!</p>
+{% endif %}
+<img src="/static/{{name}}.jpg" />
+<form action="/start" method="post">
+    Your brain: <input type="text" name="ans" />
+    <input type="submit" value="Check" />
+</form>

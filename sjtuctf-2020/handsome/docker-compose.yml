@@ -1,0 +1,19 @@
+version: "2.2"
+
+services:
+  web:
+    build: .
+    restart: "always"
+    environment:
+      CPUS: 8
+      NODE_ENV: production
+      DB_HOST: db
+      NL_SITE_URL: http://111.186.57.85:30048
+    ports:
+      - "30048:3000"
+    pids_limit: 1024
+    cpus: '0.25'
+    mem_limit: 1024M
+  db:
+    image: mongo:latest
+    restart: "always"

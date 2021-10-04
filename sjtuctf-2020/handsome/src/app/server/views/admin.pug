@@ -1,0 +1,32 @@
+extends layout
+
+block content
+	nav.navbar.navbar-expand.navbar-light.bg-light
+		.nav-item
+			.navbar-brand Control Panel
+		.navbar-nav.ml-auto
+			.nav-item
+				button.btn.navbar-btn.btn-outline-dark#btn-logout Sign Out
+
+	// preset form values if we receive a userdata object //
+	- user = typeof(udata) != 'undefined' ? udata : { }
+	// store the userId on the client side in a hidden input field //
+	input(type='hidden', value= user._id)#userId
+
+	#account-form-container.center-vertical
+		form.card.card-body.bg-light(method='post')#account-form
+			h2 Update profile
+			hr
+			.form-group.row
+				label.col-sm-3.col-form-label.col-form-label-sm Src
+				.col-sm-9
+					textarea.form-control#name-tf(type='text', name='data',rows="10")
+
+			hr
+			.form-buttons
+				button(type='submit')#account-form-btn2.btn.btn-primary Preview
+
+block scripts
+	script(src='/js/views/admin.js')
+	script(src='/js/controllers/homeController.js')
+

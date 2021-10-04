@@ -1,0 +1,1 @@
+i686-w64-mingw32-gcc -Wall -O3 -s -shared -o icon.dll icon/icon.c -lgdi32

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Kerbal Worldcup</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/css/adminlte.min.css" />
+  <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/assets/css/Source-Sans-Pro.css" />
+  <link rel="stylesheet" href="/assets/css/toastr.min.css" />
+  <script nonce="{{ ._nonce }}" src="/assets/js/jquery.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/adminlte.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/toastr.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/common.js"></script>
+</head>
+
+<body class="layout-navbar-fixed layout-fixed control-sidebar-slide-open sidebar-mini">
+  <div class="wrapper">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" data-enable-remember="true" href="#" role="button"><i
+              class="fas fa-bars"></i></a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <a href="/dashboard" class="brand-link text-center">
+        <span class="brand-text font-weight-light"><b>Kerbal</b></span>
+      </a>
+
+      <div class="sidebar">
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column nav-compact nav-flat" data-widget="treeview" role="menu"
+            data-accordion="false">
+            <li class="nav-item">
+              <a href="/dashboard" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/casino?bet=1" class="nav-link">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Casino</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/setting" class="nav-link">
+                <i class="nav-icon fas fa-cog"></i>
+                <p>Setting</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <div class="content-wrapper">
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Dashboard</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="container-fluid">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Chat room</h3>
+            </div>
+            <div class="card-body">
+              <div id="msg">
+              </div>
+              <div class="form-group row">
+                <b>[Pending]</b>
+                <p id="newmsg"></p>
+              </div>
+              <form id="chatForm" action="/api/chat" method="post" class="form-horizontal">
+                <div class="form-group row">
+                  {{- if eq .lv 1 -}}
+                  <label class="col-sm-2 col-form-label">You(quota 1/1)</label>
+                  {{- else -}}
+                  <label class="col-sm-2 col-form-label">You(LEVEL 1)(quota unlimited)</label>
+                  {{- end -}}
+                  <div class="input-group col-sm-10">
+                    <input type="text" class="form-control" name="msg" maxlength="128">
+                    <span class="input-group-append">
+                      <button type="submit" class="btn btn-outline-primary">Send</button>
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="form-group col-sm-4">
+            <form id="checkForm" action="/api/check" method="post" class="form-horizontal">
+              <input name="code" class="form-control" placeholder="md5(code)[0:6] = {{ .code }}" required>
+              {{- if eq .lv 1 -}}
+              <button id="check" class="btn btn-primary cardbtn mr-1">Report this chat room to ADMIN1</button>
+              {{- else -}}
+              <button id="check" class="btn btn-primary cardbtn mr-1">Report this chat room to ADMIN2</button>
+              {{- end -}}
+            </form>
+          </div>
+      </section>
+    </div>
+  </div>
+  <script nonce="{{ ._nonce }}">
+    "use strict";
+
+    $("#check").click((e) => {
+      e.preventDefault();
+      let form = document.getElementById("checkForm");
+      let d = {};
+      new FormData(form).forEach((value, key) => (d[key] = value));
+      JSONAction("POST", form.attributes["action"].value, d).done(function (d) {
+        if (d.code != 0)
+          toastr.error(d.msg);
+        else
+          toastr.success(d.msg, "", {
+            timeOut: 3000, onHidden: () => {
+              window.location.href = "/dashboard";
+            }
+          });
+      })
+    })
+
+    $("#chatForm").submit((e) => {
+      e.preventDefault();
+      let form = document.getElementById("chatForm");
+      let d = {};
+      new FormData(form).forEach((value, key) => (d[key] = value));
+      JSONAction("POST", form.attributes["action"].value, d).done(function (d) {
+        if (d.code != 0)
+          toastr.error(d.msg);
+        else
+          toastr.success(d.msg, "", {
+            timeOut: 500, onHidden: () => {
+              window.location.href = "/dashboard";
+            }
+          });
+      })
+    });
+
+    const msg = [
+      {
+        name: "Lara Croft",
+        used: 233,
+        quota: 999,
+        msg: "Great game! I bet $10000 on team three body, god bless me!"
+      },
+      {
+        name: "Tifa Lockhart",
+        used: 555,
+        quota: 999,
+        msg: "The administrator is too handsome, who can give me his phone number?"
+      },
+      {
+        name: "9S",
+        used: -1,
+        quota: -1,
+        msg: "I hacked into the website and upgrade my account to have unlimited quota!"
+      },
+      {
+        name: "Ada Wong",
+        used: 1,
+        quota: 2,
+        msg: "Awesome! How did you do that? I heared that this site have 2 level administrator that have secrets in UA, it seems that you got the first level account!"
+      },
+      {
+        name: "[REPLACE]",
+      }
+    ]
+
+    const ParseMSG = (d) => {
+      if (d['name'] != "[REPLACE]")
+        return `${d['name']}(quota ${d['quota'] != -1 ? d['used'] + "/" + d['quota'] : 'unlimited'}): ${d['msg']}`;
+      else
+        return `Your quota: 1, Nickname: [REPLACE]`;
+    };
+
+    for (let i = 0; i < 5; ++i)
+      $("#msg").append('<div class="form-group row"><p>' + ParseMSG(msg[i]) + '</p></div>');
+
+    $("#newmsg").text('(quota 1/1): {{ .msg }}');
+  </script>
+</body>
+
+</html>

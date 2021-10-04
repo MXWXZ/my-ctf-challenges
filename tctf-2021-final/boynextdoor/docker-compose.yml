@@ -1,0 +1,13 @@
+version: "2.2"
+
+services:
+  web:
+    build: .
+    restart: "always"
+    environment:
+      - ENV_FLAG=flag{some_flag}
+    volumes:
+      - ./upload:/app/upload
+    ports:
+      - "11451:8000"
+    mem_limit: 2048M

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Kerbal Worldcup</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/css/adminlte.min.css" />
+  <link rel="stylesheet" href="/assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="/assets/css/Source-Sans-Pro.css" />
+  <link rel="stylesheet" href="/assets/css/toastr.min.css" />
+  <link rel="stylesheet" href="/assets/css/common.css" />
+  <script nonce="{{ ._nonce }}" src="/assets/js/jquery.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/adminlte.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/toastr.min.js"></script>
+  <script nonce="{{ ._nonce }}" src="/assets/js/common.js"></script>
+</head>
+
+<body class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <a href="/"><b>Kerbal Worldcup</b></a>
+    </div>
+
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">Kerbal first online worldcup casinos!</p>
+
+        <form id="signinForm" action="/api/signin" method="post" class="form-horizontal">
+          <div class="input-group mb-3">
+            <input name="username" type="text" class="form-control" placeholder="Username" maxlength="32" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input name="password" type="password" class="form-control" placeholder="Password" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-end">
+            <button type="submit" class="btn btn-primary">Sign In</button>
+            <a class="btn" href="/signup">Sign Up</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script nonce="{{ ._nonce }}">
+    "use strict"
+
+    $("#signinForm").submit((e) => {
+      e.preventDefault();
+      let form = document.getElementById("signinForm");
+      let d = {};
+      new FormData(form).forEach((value, key) => (d[key] = value));
+      JSONAction("POST", form.attributes["action"].value, d).done(function (d) {
+        if (d.code != 0)
+          toastr.error(d.msg);
+        else
+          toastr.success(d.msg, "", {
+            timeOut: 500, onHidden: () => {
+              window.location.href = "/dashboard";
+            }
+          });
+      })
+    });
+  </script>
+</body>
+
+</html>

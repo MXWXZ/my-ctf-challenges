@@ -1,0 +1,26 @@
+<!doctype html>
+<title>JUAN</title>
+<h1>Let's JUAN</h1>
+{% if got %}
+<p>Locked! Try to submit smaller program!</p>
+{% else %}
+<p>Not locked! +12 characters/minute</p>
+{% endif %}
+<p>Current max character size: {{ size }}</p>
+<p>King of Juan: {{ name }}</p>
+
+<form action="/" method="post">
+    <p>Name: <input type="text" name="name" /></p>
+    <p>Code: <textarea type="text" name="ans"></textarea></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+
+<h2>HELP</h2>
+<p>This challenge is different, you need to submit a <a href="https://en.wikipedia.org/wiki/Brainfuck">brainfuck</a>
+    program to calculate base64.</p>
+<p>But your characters should be less than [size], the size is initial 1 and will add 1 every 5 seconds until someone
+    has solved the problem.</p>
+<p>Once the first one solved the problem, the size is no longer increasing and you can only get the flag with less or
+    equal characters than the shortest one.</p>
+<p>Input: stdin, 21 chars random string</p>
+<p>Output: stdout, base64 of input string</p>
