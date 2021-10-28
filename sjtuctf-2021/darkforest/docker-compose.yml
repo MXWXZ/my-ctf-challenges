@@ -1,0 +1,22 @@
+version: "2.2"
+
+services:
+  web:
+    build: ./frontend
+    restart: "always"
+    volumes:
+      - ./round:/app/round
+    ports:
+      - "44443:8000"
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - ./data:/data
+  server:
+    build: ./server
+    restart: "always"
+    volumes:
+      - ./round:/app/round
+    ports:
+      - "44444:44444"

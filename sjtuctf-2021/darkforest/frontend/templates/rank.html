@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Rank</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+  <a href="/">Main</a>
+  <table border="1">
+    {% for i in _rank %}
+    <tr>
+      <td>{{ i.name }}</td>
+      <td>{{ i.score }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+
+</html>

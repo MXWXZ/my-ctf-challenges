@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>ETO</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <script src="/static/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <h1>The world belongs to Trisolaris</h1>
+  <span style="display: flex;">
+    <a href="/static/server.zip">server.zip</a>
+    <a href="/token" style="margin-left:20px;">Token</a>
+    <a href="/rank" style="margin-left:20px;">Rank</a>
+  </span>
+  <span style="display: flex;">
+    <p>Previous round: {{ _round }}</p>
+    <p id="tick" style="margin-left: 10px;"></p>
+    <input id="tickrange" style="margin-left: 20px;width:500px" type="range" min="0" max="1000" step="1" value="0" />
+    <button id="see" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;">See</button>
+    <button id="stop" style="margin-top: 10px;margin-bottom: 10px;margin-left: 10px;">Stop</button>
+  </span>
+
+  <table id="tb" frame="border" rules="all" style="float:left"></table>
+  <ul id="msg" style="float:left"></ul>
+
+  <script>
+    function rangeChange(t) {
+      $('#tick').text('\tTick: ' + t.target.value + ' / ' + (src.length - 1));
+      $('#msg').empty();
+      render(src[t.target.value]);
+    }
+    $('#tickrange').on('input', rangeChange);
+
+    let func = 0;
+    let iTime;
+    function see(t) {
+      if (func != 0) {
+        return
+      }
+      $('#msg').empty();
+      iTime = parseInt($('#tickrange').prop('value'));
+      func = setInterval(function () {
+        if (iTime <= src.length - 1) {
+          $('#tickrange').prop('value', iTime);
+          $('#tick').text('\tTick: ' + iTime + ' / ' + (src.length - 1));
+          render(src[iTime]);
+          iTime++;
+        } else {
+          clearInterval(func);
+          func = 0;
+        }
+      }, 300);
+    }
+    $('#see').on('click', see);
+    function stop(t) {
+      clearInterval(func);
+      func = 0;
+    }
+    $('#stop').on('click', stop);
+
+    function render(d) {
+      $('#tb').empty();
+      let s1 = d.trim().split('\n');
+      let msglen = parseInt(s1[0]);
+      let msg = s1.slice(1, msglen + 1);
+      for (i in msg)
+        $('#msg').prepend($('<li>').text(msg[i]));
+      s1 = s1.slice(msglen + 1);
+      for (i in s1) {
+        let row = $('<tr>')
+        let s2 = s1[i].trim().split('\t')
+        for (j in s2) {
+          let obj = $('<td>')
+          let txt = s2[j];
+          switch (txt) {
+            case '0':
+              obj.css('background-color', '#C0C0C0');
+              break;
+            case 'W':
+              obj.css('background-color', '#1E90FF');
+              break;
+            case 'T':
+              obj.css('background-color', '#228B22');
+              break;
+            case 'F':
+              obj.css('background-color', '#FF0000');
+              break;
+            case 'U':
+              obj.css('background-color', '#FFA07A');
+              break;
+            case 'K':
+              obj.css('background-color', '#800000');
+              break;
+            case 'A':
+              obj.css('background-color', '#FF00FF');
+              break;
+            case 'R':
+              obj.css('background-color', '#6B8E23');
+              break;
+            case 'B':
+              obj.css('background-color', '#DC143C');
+              break;
+            case 'M':
+              obj.css('background-color', '#8A2BE2');
+              break;
+            case 'S':
+              obj.css('background-color', '#DAA520');
+              break;
+            case 'D':
+              obj.css('background-color', '#FFEFD5');
+              break;
+            case 'V':
+              obj.css('background-color', '#FFFF00');
+              break;
+            case 'G':
+              break;
+            default:
+              txt = txt.substr(0, 3);
+              obj.css('background-color', '#FF4500');
+              break
+          }
+          obj.css('width', '25px');
+          obj.css('height', '25px');
+          obj.css('align', 'center');
+          obj.css('text-align', 'center');
+          obj.css('valign', 'center');
+          obj.text(txt);
+          row.append(obj);
+        }
+        $('#tb').append(row);
+      }
+    }
+
+    let url = "/round/{{_round}}.txt";
+    let src;
+    $.get(url, function (data, status) {
+      if (status != 'success')
+        alert(status);
+      src = data.trim().split('\n\n');
+      $('#tick').text('\tTick: 0 / ' + (src.length - 1));
+      $('#tickrange').prop('max', src.length - 1);
+      render(src[0]);
+    });
+  </script>
+</body>
+
+</html>
