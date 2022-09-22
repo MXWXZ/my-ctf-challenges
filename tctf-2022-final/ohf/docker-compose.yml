@@ -1,0 +1,24 @@
+version: "2.4"
+services:
+  ohf:
+    build: .
+    restart: always
+    ports:
+      - "80:8080"
+    read_only: true
+    tmpfs:
+      - "/run"
+      - "/tmp"
+    pids_limit: 1024
+    cpus: "0.5"
+    mem_limit: 16G
+  restarter:
+    image: docker
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "while true; do sleep 120; docker restart -t 0 ohf_ohf_1; done",
+      ]
+    restart: unless-stopped
